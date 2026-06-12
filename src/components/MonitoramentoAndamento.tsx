@@ -9,7 +9,7 @@ interface MonitoramentoAndamentoProps {
   /** ETA em texto, ex: "8 mins (650m)" */
   eta: string;
   /** Lista de participantes visíveis no mapa */
-  participantes: number;
+  participantes?: number;
   /** Callback ao fechar a tela */
   onClose: () => void;
 }

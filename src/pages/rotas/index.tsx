@@ -6,9 +6,6 @@ import {
   MapPin,
   Footprints,
   Car,
-  Home,
-  Map,
-  Bell,
   User,
   Lock,
   CheckCircle2,
@@ -22,7 +19,6 @@ import { Toggle } from '../../components/Toggle';
 import { FilterTab } from '../../components/FilterTab';
 
 type FilterKey = 'todos' | 'bondes' | 'caronas';
-type TabKey = 'inicio' | 'rotas' | 'notificacoes' | 'perfil';
 
 function formatHora(hhmmss: string) {
   return hhmmss?.slice(0, 5) ?? '';
@@ -31,7 +27,6 @@ function formatHora(hhmmss: string) {
 export default function Rotas() {
   const [filter, setFilter] = useState<FilterKey>('todos');
   const [womenOnly, setWomenOnly] = useState(false);
-  const [activeTab, setActiveTab] = useState<TabKey>('rotas');
 
   const [bondesAndamento, setBondesAndamento] = useState<Bonde[]>([]);
   const [caronasAndamento, setCaronasAndamento] = useState<Carona[]>([]);

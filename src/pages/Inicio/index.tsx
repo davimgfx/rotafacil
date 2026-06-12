@@ -5,24 +5,17 @@ import {
   Search,
   UserPlus,
   Car,
-  Map,
-  Bell,
   User,
-  Home,
   Clock,
   Footprints,
   Lock,
 } from 'lucide-react';
-
-import { NavItem } from '../../components/NavItem';
 import { CriarBondeModal } from '../../components/CriarbondeModal';
 import { OferecerCaronaModal } from '../../components/OferecerCaronaModal';
 import { supabase } from '../../lib/supabase';
 import type { Bonde, Carona } from '../../types';
 import { getUsuarioId } from '../../lib/auth';
 import { BottomNav } from '../../components/BottomNav';
-
-type TabKey = 'inicio' | 'rotas' | 'notificacoes' | 'perfil';
 
 function formatHora(hhmmss: string) {
   return hhmmss?.slice(0, 5) ?? '';
@@ -31,7 +24,6 @@ function formatHora(hhmmss: string) {
 export function Inicio() {
   const [bondeModalOpen, setBondeModalOpen] = useState(false);
   const [caronaModalOpen, setCaronaModalOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<TabKey>('inicio');
 
   const [bondes, setBondes] = useState<Bonde[]>([]);
   const [caronas, setCaronas] = useState<Carona[]>([]);

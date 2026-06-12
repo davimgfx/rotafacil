@@ -60,10 +60,10 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 // ── Avatar genérico ───────────────────────────────────────────
-function Avatar({ nome_cliente }: { nome: string }) {
+function Avatar({ nome_cliente }: { nome_cliente: string }) {
   const initials = nome_cliente
     .split(' ')
-    .map((n) => n[0])
+    .map((n: string) => n[0])
     .slice(0, 2)
     .join('')
     .toUpperCase();

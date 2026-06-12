@@ -13,7 +13,7 @@ export default function Notificacoes() {
           <h1 className="text-[15px] font-semibold tracking-wide text-blue-100">
             RotaSegura Uni
           </h1>
-          <span className="text-blue-400 text-sm font-mono">505</span>
+          <span className="text-blue-400 text-sm font-mono">SOS</span>
         </header>
 
         {/* Main scroll area */}

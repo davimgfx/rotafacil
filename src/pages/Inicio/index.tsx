@@ -188,7 +188,7 @@ export function Inicio() {
               RotaSegura Uni
             </h1>
           </div>
-          <span className="text-blue-400 text-sm font-mono">505</span>
+          <span className="text-blue-400 text-sm font-mono">SOS</span>
         </header>
 
         {/* Main scroll area */}

@@ -17,8 +17,16 @@ import { BottomNav } from '../../components/BottomNav';
 import { Badge } from '../../components/Badge';
 import { Toggle } from '../../components/Toggle';
 import { FilterTab } from '../../components/FilterTab';
+import MonitoramentoAndamento from '../../components/MonitoramentoAndamento';
 
 type FilterKey = 'todos' | 'bondes' | 'caronas';
+
+// Qual rota está aberta no modal de monitoramento
+interface RotaAberta {
+  id: string;
+  origem: string;
+  destino: string;
+}
 
 function formatHora(hhmmss: string) {
   return hhmmss?.slice(0, 5) ?? '';
@@ -30,6 +38,9 @@ export default function Rotas() {
 
   const [bondesAndamento, setBondesAndamento] = useState<Bonde[]>([]);
   const [caronasAndamento, setCaronasAndamento] = useState<Carona[]>([]);
+
+  // Guarda os dados da rota aberta, não só o id
+  const [rotaAberta, setRotaAberta] = useState<RotaAberta | null>(null);
 
   const [bondes, setBondes] = useState<Bonde[]>([]);
   const [caronas, setCaronas] = useState<Carona[]>([]);
@@ -196,7 +207,10 @@ export default function Rotas() {
     fetchAll();
   };
 
-  const handleEncerrarBonde = async (bondeId: string) => {
+  const handleEncerrarBonde = async (e: React.MouseEvent, bondeId: string) => {
+    // Impede que o clique propague para o div pai e abra o modal
+    e.stopPropagation();
+
     setActionError(null);
     setPendingId(bondeId);
 
@@ -215,7 +229,13 @@ export default function Rotas() {
     fetchAll();
   };
 
-  const handleEncerrarCarona = async (caronaId: string) => {
+  const handleEncerrarCarona = async (
+    e: React.MouseEvent,
+    caronaId: string
+  ) => {
+    // Impede que o clique propague para o div pai e abra o modal
+    e.stopPropagation();
+
     setActionError(null);
     setPendingId(caronaId);
 
@@ -263,7 +283,7 @@ export default function Rotas() {
           <h1 className="text-[15px] font-semibold tracking-wide text-blue-100">
             RotaSegura Uni
           </h1>
-          <span className="text-blue-400 text-sm font-mono">505</span>
+          <span className="text-blue-400 text-sm font-mono">SOS</span>
         </header>
 
         {/* Main scroll area */}
@@ -295,7 +315,14 @@ export default function Rotas() {
                 return (
                   <div
                     key={bonde.id}
-                    className="bg-[#16161F] border border-amber-500/20 rounded-xl p-4">
+                    className="bg-[#16161F] border border-amber-500/20 rounded-xl p-4 cursor-pointer"
+                    onClick={() =>
+                      setRotaAberta({
+                        id: bonde.id,
+                        origem: bonde.origem,
+                        destino: bonde.destino,
+                      })
+                    }>
                     <div className="flex items-start gap-3">
                       <div className="w-9 h-9 rounded-lg bg-amber-500/15 flex items-center justify-center shrink-0">
                         <Footprints className="w-5 h-5 text-amber-400" />
@@ -329,7 +356,8 @@ export default function Rotas() {
                       <button
                         type="button"
                         disabled={pendingId === bonde.id}
-                        onClick={() => handleEncerrarBonde(bonde.id)}
+                        // e.stopPropagation() evita abrir o modal ao encerrar
+                        onClick={(e) => handleEncerrarBonde(e, bonde.id)}
                         className="w-full mt-3 py-2.5 rounded-lg border border-red-500/40 text-red-400 text-sm font-medium hover:bg-red-500/10 transition disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2">
                         <Lock className="w-4 h-4" />
                         {pendingId === bonde.id
@@ -351,7 +379,14 @@ export default function Rotas() {
                 return (
                   <div
                     key={carona.id}
-                    className="bg-[#16161F] border border-amber-500/20 rounded-xl p-4">
+                    className="bg-[#16161F] border border-amber-500/20 rounded-xl p-4 cursor-pointer"
+                    onClick={() =>
+                      setRotaAberta({
+                        id: carona.id,
+                        origem: carona.origem,
+                        destino: carona.destino,
+                      })
+                    }>
                     <div className="flex items-start gap-3">
                       <div className="w-9 h-9 rounded-lg bg-amber-500/15 flex items-center justify-center shrink-0">
                         <Car className="w-5 h-5 text-amber-400" />
@@ -385,7 +420,8 @@ export default function Rotas() {
                       <button
                         type="button"
                         disabled={pendingId === carona.id}
-                        onClick={() => handleEncerrarCarona(carona.id)}
+                        // e.stopPropagation() evita abrir o modal ao encerrar
+                        onClick={(e) => handleEncerrarCarona(e, carona.id)}
                         className="w-full mt-3 py-2.5 rounded-lg border border-red-500/40 text-red-400 text-sm font-medium hover:bg-red-500/10 transition disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2">
                         <Lock className="w-4 h-4" />
                         {pendingId === carona.id
@@ -604,6 +640,18 @@ export default function Rotas() {
         {/* Bottom nav */}
         <BottomNav />
       </div>
+
+      {/* Modal de monitoramento — fora do scroll, renderiza uma única vez */}
+      {rotaAberta && (
+        <div className="fixed inset-0 z-50">
+          <MonitoramentoAndamento
+            origem={rotaAberta.origem}
+            destino={rotaAberta.destino}
+            eta="8 mins (650m)"
+            onClose={() => setRotaAberta(null)}
+          />
+        </div>
+      )}
     </div>
   );
 }

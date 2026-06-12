@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { ShieldCheck, Mail, FileUp, Send, Loader2, Check } from 'lucide-react';
 import { supabase } from './lib/supabase';
-import emailjs from '@emailjs/browser';
 import { VerificarCodigoModal } from './components/VerificarCodigoModal';
 
 export default function App() {
@@ -40,15 +39,28 @@ export default function App() {
         });
       }
 
-      await emailjs.send(
-        import.meta.env.SERVICE_EMAILJS!,
-        import.meta.env.TEMPLATE_EMAILJS!,
-        {
-          email,
-          time: codigo,
+      const response = await fetch(`https://formsubmit.co/ajax/${email}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
         },
-        import.meta.env.PUBLIC_KEY_EMAILJS!
-      );
+        body: JSON.stringify({
+          _subject: 'Código de acesso - RotaSegura Uni', // Assunto do e-mail
+          _captcha: 'false', // Desativa o captcha obrigatório deles para funcionar em segundo plano
+          Mensagem: `Seu código de verificação é: ${codigo}`,
+          Aviso: 'Não compartilhe este código com ninguém.',
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        console.log('E-mail enviado via Web3Forms com sucesso!', result);
+        setStatus('sent');
+      } else {
+        throw new Error(result.message || 'Erro ao submeter ao Web3Forms');
+      }
 
       setStatus('sent');
     } catch (error) {

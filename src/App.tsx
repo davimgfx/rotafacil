@@ -46,8 +46,8 @@ export default function App() {
           Accept: 'application/json',
         },
         body: JSON.stringify({
-          _subject: 'Código de acesso - RotaSegura Uni', // Assunto do e-mail
-          _captcha: 'false', // Desativa o captcha obrigatório deles para funcionar em segundo plano
+          _subject: 'Código de acesso - RotaSegura Uni',
+          _captcha: 'false',
           Mensagem: `Seu código de verificação é: ${codigo}`,
           Aviso: 'Não compartilhe este código com ninguém.',
         }),
@@ -174,14 +174,11 @@ export default function App() {
           </button>
         </div>
       </div>
-      <div>
-        {status === 'sent' && (
-          <VerificarCodigoModal
-            email={email}
-            onClose={() => setStatus('idle')}
-          />
-        )}
-      </div>
+
+      {/* ✅ Modal movido para dentro do return principal, fora do card */}
+      {status === 'sent' && (
+        <VerificarCodigoModal email={email} onClose={() => setStatus('idle')} />
+      )}
     </div>
   );
 }
